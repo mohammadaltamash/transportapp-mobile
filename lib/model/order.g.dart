@@ -1,0 +1,167 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'order.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+Order _$OrderFromJson(Map<String, dynamic> json) {
+  return Order(
+    json['id'] as int,
+    json['brokerOrderId'] as String,
+    json['enclosedTrailer'] as bool,
+    json['m22Inspection'] as bool,
+    json['pickupContactName'] as String,
+    json['pickupCompanyName'] as String,
+    json['pickupAddress'] as String,
+    json['pickupAddressState'] as String,
+    json['pickupZip'] as String,
+    (json['pickupLatitude'] as num)?.toDouble(),
+    (json['pickupLongitude'] as num)?.toDouble(),
+    (json['pickupPhones'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k, e as String),
+    ),
+    json['pickupSignatureNotRequired'] as bool,
+    (json['pickupDates'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k, e == null ? null : DateTime.parse(e as String)),
+    ),
+    json['preferredPickupDate'] == null
+        ? null
+        : DateTime.parse(json['preferredPickupDate'] as String),
+    json['committedPickupDate'] == null
+        ? null
+        : DateTime.parse(json['committedPickupDate'] as String),
+    json['pickupDatesRestrictions'] as String,
+    json['deliveryContactName'] as String,
+    json['deliveryCompanyName'] as String,
+    json['deliveryAddress'] as String,
+    json['deliveryAddressState'] as String,
+    json['deliveryZip'] as String,
+    (json['deliveryLatitude'] as num)?.toDouble(),
+    (json['deliveryLongitude'] as num)?.toDouble(),
+    (json['deliveryPhones'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k, e as String),
+    ),
+    json['deliverySignatureNotRequired'] as bool,
+    (json['deliveryDates'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k, e == null ? null : DateTime.parse(e as String)),
+    ),
+    json['preferredDeliveryDate'] == null
+        ? null
+        : DateTime.parse(json['preferredDeliveryDate'] as String),
+    json['committedDeliveryDate'] == null
+        ? null
+        : DateTime.parse(json['committedDeliveryDate'] as String),
+    json['deliveryDatesRestrictions'] as String,
+    json['vehicleYear'] as int,
+    json['vehicleMake'] as String,
+    json['vehicleModel'] as String,
+    json['vehicleAutoType'] as String,
+    json['vehicleColor'] as String,
+    json['vehicleVIN'] as String,
+    json['vehicleLOTNumber'] as String,
+    json['vehicleBuyerId'] as String,
+    json['vehicleInoperable'] as bool,
+    json['dispatchInstructions'] as String,
+    (json['carrierPay'] as num)?.toDouble(),
+    json['daysToPay'] as String,
+    (json['amountOnPickup'] as num)?.toDouble(),
+    json['paymentOnPickupMethod'] as String,
+    (json['amountOnDelivery'] as num)?.toDouble(),
+    json['paymentOnDeliveryMethod'] as String,
+    json['paymentTermBusinessDays'] as String,
+    json['paymentMethod'] as String,
+    json['paymentTermBegins'] as String,
+    json['paymentNotes'] as String,
+    json['brokerContactName'] as String,
+    json['brokerCompanyName'] as String,
+    json['brokerAddress'] as String,
+    json['brokerZip'] as String,
+    (json['brokerLatitude'] as num)?.toDouble(),
+    (json['brokerLongitude'] as num)?.toDouble(),
+    (json['shipperPhones'] as Map<String, dynamic>)?.map(
+      (k, e) => MapEntry(k, e as String),
+    ),
+    json['brokerEmail'] as String,
+    json['orderStatus'] as String,
+    json['orderCategory'] as String,
+    json['distance'] as int,
+    (json['perMile'] as num)?.toDouble(),
+    (json['radiusPickupDistance'] as num)?.toDouble(),
+    (json['radiusDeliveryDistance'] as num)?.toDouble(),
+    json['termsAndConditions'] as String,
+  );
+}
+
+Map<String, dynamic> _$OrderToJson(Order instance) => <String, dynamic>{
+      'id': instance.id,
+      'brokerOrderId': instance.brokerOrderId,
+      'enclosedTrailer': instance.enclosedTrailer,
+      'm22Inspection': instance.m22Inspection,
+      'pickupContactName': instance.pickupContactName,
+      'pickupCompanyName': instance.pickupCompanyName,
+      'pickupAddress': instance.pickupAddress,
+      'pickupAddressState': instance.pickupAddressState,
+      'pickupZip': instance.pickupZip,
+      'pickupLatitude': instance.pickupLatitude,
+      'pickupLongitude': instance.pickupLongitude,
+      'pickupPhones': instance.pickupPhones,
+      'pickupSignatureNotRequired': instance.pickupSignatureNotRequired,
+      'pickupDates': instance.pickupDates
+          ?.map((k, e) => MapEntry(k, e?.toIso8601String())),
+      'preferredPickupDate': instance.preferredPickupDate?.toIso8601String(),
+      'committedPickupDate': instance.committedPickupDate?.toIso8601String(),
+      'pickupDatesRestrictions': instance.pickupDatesRestrictions,
+      'deliveryContactName': instance.deliveryContactName,
+      'deliveryCompanyName': instance.deliveryCompanyName,
+      'deliveryAddress': instance.deliveryAddress,
+      'deliveryAddressState': instance.deliveryAddressState,
+      'deliveryZip': instance.deliveryZip,
+      'deliveryLatitude': instance.deliveryLatitude,
+      'deliveryLongitude': instance.deliveryLongitude,
+      'deliveryPhones': instance.deliveryPhones,
+      'deliverySignatureNotRequired': instance.deliverySignatureNotRequired,
+      'deliveryDates': instance.deliveryDates
+          ?.map((k, e) => MapEntry(k, e?.toIso8601String())),
+      'preferredDeliveryDate':
+          instance.preferredDeliveryDate?.toIso8601String(),
+      'committedDeliveryDate':
+          instance.committedDeliveryDate?.toIso8601String(),
+      'deliveryDatesRestrictions': instance.deliveryDatesRestrictions,
+      'vehicleYear': instance.vehicleYear,
+      'vehicleMake': instance.vehicleMake,
+      'vehicleModel': instance.vehicleModel,
+      'vehicleAutoType': instance.vehicleAutoType,
+      'vehicleColor': instance.vehicleColor,
+      'vehicleVIN': instance.vehicleVIN,
+      'vehicleLOTNumber': instance.vehicleLOTNumber,
+      'vehicleBuyerId': instance.vehicleBuyerId,
+      'vehicleInoperable': instance.vehicleInoperable,
+      'dispatchInstructions': instance.dispatchInstructions,
+      'carrierPay': instance.carrierPay,
+      'daysToPay': instance.daysToPay,
+      'amountOnPickup': instance.amountOnPickup,
+      'paymentOnPickupMethod': instance.paymentOnPickupMethod,
+      'amountOnDelivery': instance.amountOnDelivery,
+      'paymentOnDeliveryMethod': instance.paymentOnDeliveryMethod,
+      'paymentTermBusinessDays': instance.paymentTermBusinessDays,
+      'paymentMethod': instance.paymentMethod,
+      'paymentTermBegins': instance.paymentTermBegins,
+      'paymentNotes': instance.paymentNotes,
+      'brokerContactName': instance.brokerContactName,
+      'brokerCompanyName': instance.brokerCompanyName,
+      'brokerAddress': instance.brokerAddress,
+      'brokerZip': instance.brokerZip,
+      'brokerLatitude': instance.brokerLatitude,
+      'brokerLongitude': instance.brokerLongitude,
+      'shipperPhones': instance.shipperPhones,
+      'brokerEmail': instance.brokerEmail,
+      'orderStatus': instance.orderStatus,
+      'orderCategory': instance.orderCategory,
+      'distance': instance.distance,
+      'perMile': instance.perMile,
+      'radiusPickupDistance': instance.radiusPickupDistance,
+      'radiusDeliveryDistance': instance.radiusDeliveryDistance,
+      'termsAndConditions': instance.termsAndConditions,
+    };
