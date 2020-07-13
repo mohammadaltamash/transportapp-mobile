@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'package:conditional_builder/conditional_builder.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_driving_directions/flutter_driving_directions.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:transportappmobile/model/order.dart';
-
-import 'package:transportappmobile/utility.dart';
-import 'package:transportappmobile/view/screen/driving_directions.dart';
-import 'package:transportappmobile/view/screen_arguments.dart';
 
 class LocationMap extends StatefulWidget {
   static const routeName = '/map';
@@ -78,6 +76,7 @@ class LocationMapState extends State<LocationMap> {
   void initState() {
     super.initState();
     _initialize(pickupLatLng, deliveryLatLng);
+//    initPlatformState();
   }
 
   @override
@@ -115,14 +114,8 @@ class LocationMapState extends State<LocationMap> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                /*RawMaterialButton(
-                  onPressed: () {
-                    Navigator.pushNamed(
-                      context,
-                      DrivingDirections.routeName,
-                      arguments: ScreenArguments(latitude: deliveryLatLng.latitude, longitude: deliveryLatLng.longitude, address: order.pickupAddress),
-                    );
-                  },
+                RawMaterialButton(
+                  onPressed: initPlatformState,
                   child: Icon(
                     Icons.directions,
                     size: 25.0,
@@ -131,7 +124,7 @@ class LocationMapState extends State<LocationMap> {
                   padding: EdgeInsets.all(10.0),
                   shape: CircleBorder(),
                   fillColor: Colors.grey.withOpacity(.5),
-                ),*/
+                ),
                 ConditionalBuilder(
                   condition: goToPickupVisible,
                   builder: (context) {
@@ -350,5 +343,30 @@ class LocationMapState extends State<LocationMap> {
         textColor: Colors.white,
         fontSize: 16.0
     );
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> initPlatformState() async {
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      await FlutterDrivingDirections.launchDirections(
+          latitude: order.pickupLatitude,
+          longitude: order.pickupLongitude,
+          address: order.deliveryAddress);
+    } on PlatformException {
+      debugPrint('Failed to launch directions.');
+    }
+//    try {
+//      await FlutterDrivingDirections.launchDirections(
+//          latitude: 40.6467233,
+//          longitude: -74.0208955,
+//          address: '3955 Montgomery Rd');
+//    } on PlatformException {
+//      debugPrint('Failed to launch directions.');
+//    }
+//    DrivingDirections(latitude: 40.6467233,
+//        longitude: -74.0208955,
+//        address: '3955 Montgomery Rd')
+//    )
   }
 }

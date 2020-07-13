@@ -5,9 +5,9 @@ class ScreenArguments {
   final Order order;
   final LatLng pickupLatLng;
   final LatLng deliveryLatLng;
-  final double latitude;
-  final double longitude;
-  final String address;
+  final double latitude; // DrivingDirections
+  final double longitude; // DrivingDirections
+  final String address; // DrivingDirections
   final int orderId; // ImageInput, Carousel
   final String location; // ImageInput, Carousel
   final String imageType; // ImageInput

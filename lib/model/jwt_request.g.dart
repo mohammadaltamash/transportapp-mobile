@@ -7,9 +7,10 @@ part of 'jwt_request.dart';
 // **************************************************************************
 
 JwtRequest _$JwtRequestFromJson(Map<String, dynamic> json) {
-  return JwtRequest()
-    ..email = json['email'] as String
-    ..password = json['password'] as String;
+  return JwtRequest(
+    email: json['email'] as String,
+    password: json['password'] as String,
+  );
 }
 
 Map<String, dynamic> _$JwtRequestToJson(JwtRequest instance) =>

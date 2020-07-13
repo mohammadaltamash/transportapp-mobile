@@ -1,1 +1,0 @@
-"# transportapp-mobile"  initgit add README.mdgit commit -m "first commit"git remote add origin git@github.com:mohammadaltamash/transportapp-mobile.gitgit push -u origin master                

@@ -1,4 +1,3 @@
-/*
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,7 +13,7 @@ class DrivingDirections extends StatefulWidget {
   DrivingDirections({Key key, @required this.latitude, @required this.longitude, @required this.address}) : super(key: key);
 
   @override
-  _DrivingDirectionsState createState() => _DrivingDirectionsState();
+  _DrivingDirectionsState createState() => _DrivingDirectionsState(latitude: latitude, longitude: longitude, address: address);
 }
 
 class _DrivingDirectionsState extends State<DrivingDirections> {
@@ -35,9 +34,9 @@ class _DrivingDirectionsState extends State<DrivingDirections> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       await FlutterDrivingDirections.launchDirections(
-          latitude: latitude,
-          longitude: longitude,
-          address: address);
+          latitude: 42.319935,
+          longitude: -84.020364,
+          address: '320 Main Street');
     } on PlatformException {
       debugPrint('Failed to launch directions.');
     }
@@ -56,4 +55,4 @@ class _DrivingDirectionsState extends State<DrivingDirections> {
       ),
     );
   }
-}*/
+}

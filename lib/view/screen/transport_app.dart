@@ -10,7 +10,6 @@ import 'package:transportappmobile/view/screen/order_list.dart';
 final storage = FlutterSecureStorage();
 
 class TransportApp extends StatelessWidget {
-
   Future<String> get jwtOrEmpty async {
     var jwt = await storage.read(key: "jwt");
     if (jwt == null) {
@@ -34,8 +33,10 @@ class TransportApp extends StatelessWidget {
             if (jwt.length != 3) {
               return LoginPage();
             } else {
-              var payload = json.decode(utf8.decode(base64.decode(base64.normalize(jwt[1]))));
-              if (DateTime.fromMicrosecondsSinceEpoch(payload["exp"]*1000).isAfter(DateTime.now())) {
+              var payload = json
+                  .decode(utf8.decode(base64.decode(base64.normalize(jwt[1]))));
+              if (DateTime.fromMicrosecondsSinceEpoch(payload["exp"] * 1000)
+                  .isAfter(DateTime.now())) {
                 return OrderList(jwt, payload);
               } else {
                 return LoginPage();

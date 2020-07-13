@@ -204,7 +204,7 @@ class _ImageInput extends State<ImageInput> {
           onPressed: () {
             _startUploading();
           },
-          color: Colors.pinkAccent,
+          color: Colors.blue,
           textColor: Colors.white,
         ),
       );

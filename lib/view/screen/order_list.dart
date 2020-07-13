@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:transportappmobile/controller/network_helper.dart';
 import 'package:transportappmobile/model/order.dart';
+import 'package:transportappmobile/view/screen/auth/login_page.dart';
 import 'package:transportappmobile/view/screen/order_detail.dart';
 import 'package:transportappmobile/view/screen/utilities.dart';
 import 'package:transportappmobile/view/screen_arguments.dart';
+import 'package:transportappmobile/view/app_drawer.dart';
 import '../../constants.dart' as Constants;
 import 'dart:convert' show json, base64, utf8;
 
 class OrderList extends StatefulWidget {
   static const routeName = '/order_list';
-
   final String jwt;
   final Map<String, dynamic> payload;
 
@@ -22,10 +24,13 @@ class OrderList extends StatefulWidget {
       );
 
   @override
-  _OrderListState createState() => _OrderListState();
+  _OrderListState createState() => _OrderListState(jwt: jwt, payload: payload);
 }
 
 class _OrderListState extends State<OrderList> {
+  String jwt;
+  Map<String, dynamic> payload;
+  _OrderListState({this.payload, this.jwt});
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -33,7 +38,7 @@ class _OrderListState extends State<OrderList> {
           context: context,
           builder: (c) => AlertDialog(
                   title: Text('Warning'),
-                  content: Text('Do you really want exit'),
+                  content: Text('Do you really want to exit'),
                   actions: [
                     FlatButton(
                       child: Text('Yes'),
@@ -54,16 +59,17 @@ class _OrderListState extends State<OrderList> {
           centerTitle: true,
         ),
         body: Center(
-          child: _ordersData(),
+          child: _ordersData(payload['sub'], jwt),
         ),
+        drawer: AppDrawer(),
       ),
     );
   }
 }
 
-FutureBuilder _ordersData() {
+FutureBuilder _ordersData(String email, String jwt) {
   return FutureBuilder<List<Order>>(
-    future: NetworkHelper().getOrders(),
+    future: NetworkHelper().getOrdersByAssignedToDriver(email, jwt),
     builder: (BuildContext context, AsyncSnapshot<List<Order>> snapshot) {
       if (snapshot.hasData) {
         List<Order> data = snapshot.data;
@@ -89,7 +95,7 @@ ListView _orders(data, context) {
 ListTile _tile(Order order, context) {
   return ListTile(
     title: Text(
-      order.brokerOrderId + ' #' + order.id.toString(),
+      order.brokerOrderId + ' #' + order.id.toString() + ' ' + order.orderStatus,
       style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
     ),
     subtitle: Text(order.pickupAddress),

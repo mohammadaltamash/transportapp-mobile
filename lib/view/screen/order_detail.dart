@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:transportappmobile/model/order.dart';
+import 'package:transportappmobile/view/app_drawer.dart';
 import 'package:transportappmobile/view/screen/carousel.dart';
 import 'package:transportappmobile/view/screen/image_input.dart';
 import 'package:transportappmobile/view/screen/location_map.dart';
@@ -72,25 +73,6 @@ class OrderDetail extends StatelessWidget {
                   );
                 },
               ),*/
-              RaisedButton.icon(
-                icon: Icon(
-                  Icons.photo_camera,
-                ),
-                label: Text(Constants.ADD_PICKUP_IMAGE),
-                color: Colors.amber,
-                onPressed: () {
-//                  var camera = firstCamera().then((value) => value);
-                  Navigator.pushNamed(
-                    context,
-                    ImageInput.routeName,
-                    arguments: ScreenArguments(
-                      orderId: order.id,
-                      location: 'Pickup',
-                      imageType: 'PICKUP'
-                    )
-                  );
-                },
-              ),
               AddImageButton(
                 orderId: order.id,
                 buttonText: Constants.ADD_PICKUP_IMAGE,
@@ -135,6 +117,7 @@ class OrderDetail extends StatelessWidget {
 //          Text('Pickup: ' + order.pickupAddress + '\n' + 'Delivery: ' + order.deliveryAddress),
         ),
       ),
+      drawer: AppDrawer(),
     );
   }
 

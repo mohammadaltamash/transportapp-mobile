@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:transportappmobile/view/screen/carousel.dart';
+import 'package:transportappmobile/view/screen/driving_directions.dart';
 import 'package:transportappmobile/view/screen/image_input.dart';
 import 'package:transportappmobile/view/screen/images_list.dart';
 import 'package:transportappmobile/view/screen/location_map.dart';
@@ -46,14 +47,14 @@ Future<void> main() async {
           },
         );
       }
-//      if (settings.name == DrivingDirections.routeName) {
-//        final ScreenArguments args = settings.arguments;
-//        return MaterialPageRoute(
-//          builder: (context) {
-//            return DrivingDirections(latitude: args.latitude, longitude: args.longitude, address: args.address);
-//          },
-//        );
-//      }
+      if (settings.name == DrivingDirections.routeName) {
+        final ScreenArguments args = settings.arguments;
+        return MaterialPageRoute(
+          builder: (context) {
+            return DrivingDirections(latitude: args.latitude, longitude: args.longitude, address: args.address);
+          },
+        );
+      }
       if (settings.name == ImageInput.routeName) {
         final ScreenArguments args = settings.arguments;
         return MaterialPageRoute(
