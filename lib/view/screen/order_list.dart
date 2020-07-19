@@ -1,19 +1,21 @@
+import 'dart:convert';
+import 'dart:convert' show json, base64, utf8;
+
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:stomp/stomp.dart';
+import 'package:transportappmobile/constants.dart' as Constants;
 import 'package:transportappmobile/controller/network_helper.dart';
 import 'package:transportappmobile/model/order.dart';
-import 'package:transportappmobile/view/screen/auth/login_page.dart';
-import 'package:transportappmobile/view/screen/order_detail.dart';
-import 'package:transportappmobile/view/screen/utilities.dart';
-import 'package:transportappmobile/view/screen_arguments.dart';
+import 'package:transportappmobile/service/app_stomp_client.dart' show connect;
 import 'package:transportappmobile/view/app_drawer.dart';
-import '../../constants.dart' as Constants;
-import 'dart:convert' show json, base64, utf8;
+import 'package:transportappmobile/view/screen/order_detail.dart';
+import 'package:transportappmobile/view/screen_arguments.dart';
 
 class OrderList extends StatefulWidget {
   static const routeName = '/order_list';
   final String jwt;
   final Map<String, dynamic> payload;
+//  WebSocketChannel channel = WebSocketChannel.connect(Uri.parse('ws://echo.websocket.org'));
 
   OrderList(this.jwt, this.payload);
 
@@ -30,7 +32,58 @@ class OrderList extends StatefulWidget {
 class _OrderListState extends State<OrderList> {
   String jwt;
   Map<String, dynamic> payload;
-  _OrderListState({this.payload, this.jwt});
+  final inputController = TextEditingController();
+  int count = 0;
+  StompClient stompClient;
+  FutureBuilder _ordersData;
+  String message = 'No message';
+
+  _OrderListState({this.payload, this.jwt}) {
+    /*dynamic Function(StompClient, StompFrame) onConnect = (StompClient client, StompFrame frame) {
+      print('printed on console');
+    client.subscribe(
+        destination: '/topic/message',
+        callback: (StompFrame frame) {
+          List<dynamic> result = json.decode(frame.body);
+          print(result);
+        });
+    };*/
+//    stompClient = StompClientHelper.getStompClient(onConnect);
+//    stompClient.activate();
+    _ordersData = _getOrdersData(payload['sub'], jwt);
+//    stompClient.subscribe(destination: '/topic/message',
+//        callback: (StompFrame frame) {
+//          List<dynamic> result = json.decode(frame.body);
+//          print(result);
+//        });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    /*stompClient.activate();
+    stompClient.subscribe(destination: '/topic/message',
+        callback: (StompFrame frame) {
+          List<dynamic> result = json.decode(frame.body);
+          print(result);
+        });*/
+
+    connect(Constants.STOMP_CLIENT_URL).then((stompClient) {
+      this.stompClient = stompClient;
+      stompClient.subscribeString("123", "/topic/message", (Map<String, String> headers, String message) {
+        print("receive message: " + message);
+        if (message == 'DRIVER_ASSIGNED') {
+          setState(() {
+            this.message = message;
+            _ordersData = _getOrdersData(payload['sub'], jwt);
+          });
+        }
+      });
+    }, onError: (error) {
+      print("connect failed");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -59,15 +112,61 @@ class _OrderListState extends State<OrderList> {
           centerTitle: true,
         ),
         body: Center(
-          child: _ordersData(payload['sub'], jwt),
+          child: _ordersData,
+            /*child: Center(
+              child: RaisedButton(
+                onPressed: () {
+                  setState(() {
+                    count++;
+                  });
+                  stompClient.send(destination: '/app/message', body: 'Hello ' + count.toString());
+                },
+                child: Text("Send message"),
+              ),
+            )*/
         ),
         drawer: AppDrawer(),
       ),
     );
   }
+
+  @override
+  void dispose() {
+//    stompClient.deactivate();
+    super.dispose();
+  }
+
+  /*static dynamic onConnect(StompClient client, StompFrame frame) {
+    print('printed on console');
+    client.subscribe(
+        destination: '/topic/message',
+        callback: (StompFrame frame) {
+//          List<dynamic> result = json.decode(frame.body);
+          String message = frame.body;
+//          print(result);
+          print(message);
+          if (message == 'REFRESH') {
+            _ordersData = _getOrdersData(payload['sub'], jwt);
+          }
+        });
+
+//  Timer.periodic(Duration(seconds: 10), (_) {
+//    client.send(
+//        destination: '/app/message', body: json.encode({'From flutter app': 123}));
+//  });
+  }
+
+  final stompClient = StompClient(
+      config: StompConfig(
+        url: Constants.STOMP_CLIENT_URL,
+        onConnect: onConnect,
+        onWebSocketError: (dynamic error) => print(error.toString()),
+//        stompConnectHeaders: {'Authorization': 'Bearer ' + jwt},
+//        webSocketConnectHeaders: {'Authorization': 'Bearer ' + jwt}
+      ));*/
 }
 
-FutureBuilder _ordersData(String email, String jwt) {
+FutureBuilder _getOrdersData(String email, String jwt) {
   return FutureBuilder<List<Order>>(
     future: NetworkHelper().getOrdersByAssignedToDriver(email, jwt),
     builder: (BuildContext context, AsyncSnapshot<List<Order>> snapshot) {
@@ -110,11 +209,39 @@ ListTile _tile(Order order, context) {
   );
 }
 
-//_showOrderDetail(context, ord) {
-//    Navigator.push(
-//      context,
-//      MaterialPageRoute(
-//        builder: (context) => OrderDetail(order: ord),
-//      ),
-//    );
-//}
+/*
+dynamic onConnect(StompClient client, StompFrame frame) {
+  print('printed on console');
+  client.subscribe(
+      destination: '/topic/message',
+      callback: (StompFrame frame) {
+//          List<dynamic> result = json.decode(frame.body);
+        String message = frame.body;
+//          print(result);
+        print(message);
+        if (message == 'REFRESH') {
+//          _ordersData = _getOrdersData(payload['sub'], jwt);
+
+//          Navigator.push(
+//            null,
+//            OrderList.routeName
+////            arguments: ScreenArguments(jwt: token),
+//          );
+//          new GlobalKey<NavigatorState>().currentState.pushNamed(OrderList.routeName);
+        }
+      });
+
+//  Timer.periodic(Duration(seconds: 10), (_) {
+//    client.send(
+//        destination: '/app/message', body: json.encode({'From flutter app': 123}));
+//  });
+}
+
+final stompClient = StompClient(
+    config: StompConfig(
+  url: Constants.STOMP_CLIENT_URL,
+  onConnect: onConnect,
+  onWebSocketError: (dynamic error) => print(error.toString()),
+//        stompConnectHeaders: {'Authorization': 'Bearer ' + jwt},
+//        webSocketConnectHeaders: {'Authorization': 'Bearer ' + jwt}
+));*/

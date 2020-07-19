@@ -1,13 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:transportappmobile/controller/network_helper.dart';
 import 'package:transportappmobile/model/order.dart';
 import 'package:transportappmobile/view/app_drawer.dart';
 import 'package:transportappmobile/view/screen/carousel.dart';
 import 'package:transportappmobile/view/screen/image_input.dart';
 import 'package:transportappmobile/view/screen/location_map.dart';
-import 'package:transportappmobile/view/screen/widgets/add_image_button.dart';
+import 'package:transportappmobile/view/screen/signature_pad.dart';
+import 'package:transportappmobile/view/screen/widgets/button_navigation.dart';
 import 'package:transportappmobile/view/screen_arguments.dart';
+
 import '../../constants.dart' as Constants;
 
 class OrderDetail extends StatelessWidget {
@@ -32,85 +35,116 @@ class OrderDetail extends StatelessWidget {
       body: Center(
         child: Padding(
           padding: EdgeInsets.all(16.0),
-          child: Column(
+          child: ListView(
             children: <Widget>[
-              Text('Pickup: ' + order.pickupAddress + '\n' + 'Delivery: ' + order.deliveryAddress),
-              RaisedButton.icon(
-                icon: Icon(
-                  Icons.map,
-                ),
-                label: Text('Map'),
-                color: Colors.amber,
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    LocationMap.routeName,
-                    arguments: ScreenArguments(
+              Text('Pickup: ' + order.pickupAddress),
+              Text('Delivery: ' + order.deliveryAddress),
+              ButtonNavigation(
+                  orderId: order.id,
+                  text: Constants.MAP,
+                  routeName: LocationMap.routeName,
+                  iconData: Icons.map,
+                  arguments: ScreenArguments(
                         pickupLatLng: LatLng(order.pickupLatitude, order.pickupLongitude),
                         deliveryLatLng: LatLng(order.deliveryLatitude, order.deliveryLongitude),
                         order: order
-                    ),
-                  );
-                },
+                  )),
+              ButtonNavigation(
+                  orderId: order.id,
+                  text: Constants.ADD_PICKUP_IMAGE,
+                  routeName: ImageInput.routeName,
+                  iconData: Icons.photo_camera,
+                  arguments: ScreenArguments(
+                    orderId: order.id,
+                    location: 'Pickup',
+                    imageType: Constants.PICKUP
+                  )),
+              ButtonNavigation(
+                  orderId: order.id,
+                  text: Constants.PICKUP_IMAGES,
+                  routeName: Carousel.routeName,
+                  iconData: Icons.view_carousel,
+                  arguments: ScreenArguments(
+                    index: 0,
+                    orderId: order.id,
+                    location: 'Pickup'
+                  )),
+              SizedBox(
+                height: 20.0,
               ),
-              /*RaisedButton.icon(
-                icon: Icon(
-                  Icons.camera,
-                ),
-                label: Text('Camera'),
-                color: Colors.amber,
-                onPressed: () async {
-                  final cameras = await availableCameras();
-                  // Get a specific camera from the list of available cameras.
-                  final firstCamera = cameras.first;
-//                  var camera = firstCamera().then((value) => value);
-                  Navigator.pushNamed(
-                    context,
-                    TakePicture.routeName,
-                    arguments: ScreenArguments(
-                        cameraDescription: firstCamera
+              Card(
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        width: 150.0,
+                        child: ButtonNavigation(
+                          orderId: order.id,
+                          text: Constants.CONSIGNOR_SIGNATURE,
+                          routeName: SignaturePad.routeName,
+                          iconData: Icons.edit,
+                          arguments: ScreenArguments(
+                            order: order,
+                            signedBy: Constants.CONSIGNOR
+                          )
+                        ),
+                      ),
                     ),
-                  );
-                },
-              ),*/
-              AddImageButton(
-                orderId: order.id,
-                buttonText: Constants.ADD_PICKUP_IMAGE,
-                imageType: Constants.PICKUP,
+                    _getSignatureImage(Constants.CONSIGNOR)
+                  ]
+                ),
+                elevation: .5,
               ),
-              /*RaisedButton.icon(
-                icon: Icon(
-                  Icons.image,
+              Card(
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        width: 150.0,
+                        child: ButtonNavigation(
+                            orderId: order.id,
+                            text: Constants.DRIVER_SIGNATURE,
+                            routeName: SignaturePad.routeName,
+                            iconData: Icons.edit,
+                            arguments: ScreenArguments(
+                              order: order,
+                              signedBy: Constants.DRIVER
+                            )
+                        ),
+                      ),
+                    ),
+                    _getSignatureImage(Constants.DRIVER)
+                  ],
                 ),
-                label: Text('Images'),
-                color: Colors.amber,
-                onPressed: () {
-//                  var camera = firstCamera().then((value) => value);
-                  Navigator.pushNamed(
-                      context,
-                      ImagesList.routeName
-                  );
-                },
-              ),*/
-              RaisedButton.icon(
-                icon: Icon(
-                  Icons.view_carousel,
+                elevation: .5,
+              ),
+
+              Card(
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        width: 150.0,
+                        child: ButtonNavigation(
+                            orderId: order.id,
+                            text: Constants.CONSIGNEE_SIGNATURE,
+                            routeName: SignaturePad.routeName,
+                            iconData: Icons.edit,
+                            arguments: ScreenArguments(
+                              order: order,
+                              signedBy: Constants.CONSIGNEE
+                            )
+                        ),
+                      ),
+                    ),
+                    _getSignatureImage(Constants.CONSIGNEE)
+                  ],
                 ),
-                label: Text(Constants.PICKUP_IMAGES),
-                color: Colors.amber,
-                onPressed: () {
-//                  var camera = firstCamera().then((value) => value);
-                  Navigator.pushNamed(
-                    context,
-                    Carousel.routeName,
-                    arguments: ScreenArguments(
-                      index: 0,
-                      orderId: order.id,
-                      location: 'Pickup'
-                    )
-                  );
-                },
-              )
+                elevation: .5,
+              ),
             ],
           ),
 
@@ -118,6 +152,31 @@ class OrderDetail extends StatelessWidget {
         ),
       ),
       drawer: AppDrawer(),
+    );
+  }
+
+  FutureBuilder _getSignatureImage(signedBy) {
+    return FutureBuilder<String>(
+      future: NetworkHelper().getImagesgetByOrderIdAndSignedBy(order.id, signedBy),
+      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+        if (snapshot.hasData) {
+          String url = snapshot.data;
+          return Expanded(
+//            child: Card(
+              child: Image.network(
+                url,
+                fit: BoxFit.contain,
+                height: 140.0,
+//            alignment: Alignment.topCenter,
+              width: MediaQuery.of(context).size.width,
+              ),
+//            ),
+          );
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+        return CircularProgressIndicator();
+      },
     );
   }
 

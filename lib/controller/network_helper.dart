@@ -72,6 +72,19 @@ class NetworkHelper {
     }
   }
 
+  Future<String> getImagesgetByOrderIdAndSignedBy(int orderId, String signedBy) async {
+    final res = await http.get(Constants.API_SERVER + '/files/$orderId/$signedBy');
+    if (res.statusCode == 200) {
+//      var json = jsonDecode(res.body);
+//      List<dynamic> json = jsonDecode(res.body);
+//      List data = json['data'];
+      return res.body;
+//      return List<Order>.from(jason).map((Map order) => Order.fromJson(order)).toList();
+    } else {
+      throw Exception('Failed to fetch data');
+    }
+  }
+
   Future<List<dynamic>> getAllCompanies() async {
     final res = await http.get(Constants.API_SERVER + '/company/get');
     if (res.statusCode == 200) {

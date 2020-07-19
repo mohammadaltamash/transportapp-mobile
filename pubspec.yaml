@@ -45,7 +45,7 @@ dependencies:
   image_picker: 0.6.0+17
   toast: ^0.1.5
 
-  dio: ^3.0.9
+  dio:
 
 #  carousel_slider: ^1.4.1
 
@@ -60,6 +60,15 @@ dependencies:
 
   flutter_google_places: ^0.2.5
   mask_text_input_formatter: ^1.0.7
+#  stomp_dart_client:
+#  stomp:
+#  meta:
+#  web_socket_channel:
+
+  stomp: ^0.8.0
+  web_socket_channel: ^1.0.13
+  flutter_signature_pad:
+  path_provider:
 
 dev_dependencies:
   flutter_test:

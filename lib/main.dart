@@ -6,6 +6,7 @@ import 'package:transportappmobile/view/screen/images_list.dart';
 import 'package:transportappmobile/view/screen/location_map.dart';
 import 'package:transportappmobile/view/screen/order_detail.dart';
 import 'package:transportappmobile/view/screen/order_list.dart';
+import 'package:transportappmobile/view/screen/signature_pad.dart';
 import 'package:transportappmobile/view/screen/transport_app.dart';
 import 'package:transportappmobile/view/screen_arguments.dart';
 
@@ -78,6 +79,14 @@ Future<void> main() async {
         return MaterialPageRoute(
           builder: (context) {
             return Carousel(index: args.index, orderId: args.orderId, location: args.location,);
+          },
+        );
+      }
+      if (settings.name == SignaturePad.routeName) {
+        final ScreenArguments args = settings.arguments;
+        return MaterialPageRoute(
+          builder: (context) {
+            return SignaturePad(order: args.order, signedBy: args.signedBy);
           },
         );
       }

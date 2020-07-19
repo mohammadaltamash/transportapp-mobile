@@ -4,7 +4,10 @@ import 'package:flutter_page_indicator/flutter_page_indicator.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:transportappmobile/controller/network_helper.dart';
-import 'package:transportappmobile/view/screen/widgets/add_image_button.dart';
+import 'package:transportappmobile/view/screen/image_input.dart';
+import 'package:transportappmobile/view/screen/widgets/button_navigation.dart';
+import 'package:transportappmobile/view/screen_arguments.dart';
+
 import '../../constants.dart' as Constants;
 
 class Carousel extends StatelessWidget {
@@ -40,7 +43,7 @@ class Carousel extends StatelessWidget {
           control: new SwiperControl(),
         )*/
         body: Center(
-            child: FutureBuilder<List<dynamic>>(
+          child: FutureBuilder<List<dynamic>>(
           future: NetworkHelper().getImagesByOrderIdAndLocation(orderId, location),
           builder:
               (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
@@ -54,11 +57,21 @@ class Carousel extends StatelessWidget {
                     centerTitle: true,
                   ),
                   body: Center(
-                    child: AddImageButton(
+                    /*child: AddImageButton(
                       orderId: orderId,
                       buttonText: location == 'Pickup' ? Constants.ADD_PICKUP_IMAGE : Constants.ADD_DELIVERY_IMAGE,
                       imageType: Constants.PICKUP,
-                    )
+                    )*/
+                    child: ButtonNavigation(
+                      orderId: orderId,
+                      text: Constants.ADD_PICKUP_IMAGE,
+                      routeName: ImageInput.routeName,
+                      iconData: Icons.photo_camera,
+                      arguments: ScreenArguments(
+                          orderId: orderId,
+                          location: 'Pickup',
+                          imageType: Constants.PICKUP
+                      )),
                   )
 
                 );
