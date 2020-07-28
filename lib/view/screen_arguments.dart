@@ -13,7 +13,8 @@ class ScreenArguments {
   final String imageType; // ImageInput
   final int index; // Carousel
   final String jwt;
-  final String signedBy; // SignaturePad
+  final String signedBy; //
+  final bool marking;// SignaturePad
   ScreenArguments(
       {this.order,
       this.pickupLatLng,
@@ -26,5 +27,6 @@ class ScreenArguments {
       this.imageType,
       this.index,
       this.jwt,
-      this.signedBy});
+      this.signedBy,
+      this.marking});
 }

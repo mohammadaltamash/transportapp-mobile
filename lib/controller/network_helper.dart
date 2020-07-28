@@ -85,6 +85,21 @@ class NetworkHelper {
     }
   }
 
+  Future<List<dynamic>> getByOrderIdLocationAndMarking(int orderId, String location) async {
+    final res = await http.get(Constants.API_SERVER + '/files/marking/$orderId/$location');
+    if (res.statusCode == 200) {
+//      var json = jsonDecode(res.body);
+//      List<dynamic> json = jsonDecode(res.body);
+//      List data = json['data'];
+      List<dynamic> json = jsonDecode(res.body);
+//      List data = json['data'];
+      return json;
+//      return List<Order>.from(jason).map((Map order) => Order.fromJson(order)).toList();
+    } else {
+      throw Exception('Failed to fetch data');
+    }
+  }
+
   Future<List<dynamic>> getAllCompanies() async {
     final res = await http.get(Constants.API_SERVER + '/company/get');
     if (res.statusCode == 200) {

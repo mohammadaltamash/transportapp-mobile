@@ -193,12 +193,24 @@ ListView _orders(data, context) {
 
 ListTile _tile(Order order, context) {
   return ListTile(
-    title: Text(
-      order.brokerOrderId + ' #' + order.id.toString() + ' ' + order.orderStatus,
-      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
+    title: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text(
+          order.brokerOrderId + ' #' + order.id.toString(),
+          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
+        ),
+        Text(
+            order.orderStatus
+        )
+      ],
     ),
-    subtitle: Text(order.pickupAddress),
-//    onTap: () => _showOrderDetail(context, order),
+    subtitle: listItem(context, order),
+    /*leading: Text(
+      order.orderStatus,
+      style: TextStyle(fontWeight: FontWeight.w100, fontSize: 10, color: Colors.green),
+    ),*/
+//    trailing: Icon(Icons.save),
     onTap: () {
       Navigator.pushNamed(
         context,
@@ -206,6 +218,25 @@ ListTile _tile(Order order, context) {
         arguments: ScreenArguments(order: order),
       );
     },
+  );
+}
+
+Widget listItem(BuildContext context, Order order) {
+  return Column(
+    children: <Widget>[
+      /*Container(
+        child: Text(
+          order.brokerOrderId + ' #' + order.id.toString() + ' ' + order.orderStatus,
+          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
+        )
+      ),*/
+      Container(
+        child: Text(order.pickupAddress)
+      ),
+      Container(
+          child: Text(order.deliveryAddress)
+      )
+    ],
   );
 }
 

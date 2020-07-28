@@ -4,6 +4,8 @@ import 'package:flutter_page_indicator/flutter_page_indicator.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:transportappmobile/controller/network_helper.dart';
+import 'package:transportappmobile/model/order.dart';
+import 'package:transportappmobile/view/screen/image_canvas.dart';
 import 'package:transportappmobile/view/screen/image_input.dart';
 import 'package:transportappmobile/view/screen/widgets/button_navigation.dart';
 import 'package:transportappmobile/view/screen_arguments.dart';
@@ -14,9 +16,10 @@ class Carousel extends StatelessWidget {
   static const routeName = '/carousel';
 
   final int index;
-  final int orderId;
+  final Order order;
   final String location;
-  Carousel({this.index, this.orderId, this.location});
+  final bool marking;
+  Carousel({this.index, this.order, this.location, this.marking});
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +47,9 @@ class Carousel extends StatelessWidget {
         )*/
         body: Center(
           child: FutureBuilder<List<dynamic>>(
-          future: NetworkHelper().getImagesByOrderIdAndLocation(orderId, location),
-          builder:
+//          future: NetworkHelper().getImagesByOrderIdAndLocation(orderId, location),
+            future: marking ? NetworkHelper().getByOrderIdLocationAndMarking(order.id, location) : NetworkHelper().getImagesByOrderIdAndLocation(order.id, location) ,
+            builder:
               (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
 
             if (snapshot.hasData) {
@@ -53,7 +57,7 @@ class Carousel extends StatelessWidget {
               if (data.length == 0) {
                 return Scaffold(
                   appBar: AppBar(
-                    title: Text(location == 'Pickup' ? Constants.PICKUP_IMAGES : Constants.DELIVERY_IMAGES),
+                    title: Text(getTitle()),
                     centerTitle: true,
                   ),
                   body: Center(
@@ -62,16 +66,7 @@ class Carousel extends StatelessWidget {
                       buttonText: location == 'Pickup' ? Constants.ADD_PICKUP_IMAGE : Constants.ADD_DELIVERY_IMAGE,
                       imageType: Constants.PICKUP,
                     )*/
-                    child: ButtonNavigation(
-                      orderId: orderId,
-                      text: Constants.ADD_PICKUP_IMAGE,
-                      routeName: ImageInput.routeName,
-                      iconData: Icons.photo_camera,
-                      arguments: ScreenArguments(
-                          orderId: orderId,
-                          location: 'Pickup',
-                          imageType: Constants.PICKUP
-                      )),
+                    child: getAddImageButton(),
                   )
 
                 );
@@ -103,4 +98,60 @@ class Carousel extends StatelessWidget {
           },
         )));
   }
+
+  getTitle() {
+    if (marking) {
+      return location == 'Pickup' ? Constants.PICKUP_INSPECTIONS : Constants.DELIVERY_INSPECTIONS;
+    } else {
+      return location == 'Pickup' ? Constants.PICKUP_IMAGES : Constants.DELIVERY_IMAGES;
+    }
+  }
+
+  getAddImageButton() {
+    if (marking) {
+      return location == 'Pickup' ?
+      ButtonNavigation(
+          orderId: order.id,
+          text: Constants.INSPECT_ON_PICKUP,
+          routeName: ImageCanvas.routeName,
+          iconData: Icons.directions_car,
+          arguments: ScreenArguments(
+            order: order,
+            location: Constants.PICKUP,
+          )) :
+      ButtonNavigation(
+          orderId: order.id,
+          text: Constants.INSPECT_ON_DELIVERY,
+          routeName: ImageCanvas.routeName,
+          iconData: Icons.directions_car,
+          arguments: ScreenArguments(
+            order: order,
+            location: Constants.DELIVERY,
+          ));
+    } else {
+      return location == 'Pickup' ?
+      ButtonNavigation(
+          orderId: order.id,
+          text: Constants.ADD_PICKUP_IMAGE,
+          routeName: ImageInput.routeName,
+          iconData: Icons.photo_camera,
+          arguments: ScreenArguments(
+              orderId: order.id,
+              location: Constants.PICKUP,
+              imageType: Constants.PICKUP
+          )) :
+      ButtonNavigation(
+          orderId: order.id,
+          text: Constants.ADD_DELIVERY_IMAGE,
+          routeName: ImageInput.routeName,
+          iconData: Icons.photo_camera,
+          arguments: ScreenArguments(
+              orderId: order.id,
+              location: Constants.DELIVERY,
+              imageType: Constants.DELIVERY
+          ));
+    }
+  }
+
+
 }

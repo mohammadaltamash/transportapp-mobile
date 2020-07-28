@@ -5,6 +5,7 @@ import 'package:transportappmobile/controller/network_helper.dart';
 import 'package:transportappmobile/model/order.dart';
 import 'package:transportappmobile/view/app_drawer.dart';
 import 'package:transportappmobile/view/screen/carousel.dart';
+import 'package:transportappmobile/view/screen/image_canvas.dart';
 import 'package:transportappmobile/view/screen/image_input.dart';
 import 'package:transportappmobile/view/screen/location_map.dart';
 import 'package:transportappmobile/view/screen/signature_pad.dart';
@@ -14,9 +15,6 @@ import 'package:transportappmobile/view/screen_arguments.dart';
 import '../../constants.dart' as Constants;
 
 class OrderDetail extends StatelessWidget {
-
-//  final Order order;
-//  OrderDetail({Key key, @required this.order}) : super(key: key);
 
   static const routeName = '/detail';
 
@@ -34,69 +32,246 @@ class OrderDetail extends StatelessWidget {
       ),
       body: Center(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(10.0),
           child: ListView(
             children: <Widget>[
-              Text('Pickup: ' + order.pickupAddress),
-              Text('Delivery: ' + order.deliveryAddress),
-              ButtonNavigation(
-                  orderId: order.id,
-                  text: Constants.MAP,
-                  routeName: LocationMap.routeName,
-                  iconData: Icons.map,
-                  arguments: ScreenArguments(
-                        pickupLatLng: LatLng(order.pickupLatitude, order.pickupLongitude),
-                        deliveryLatLng: LatLng(order.deliveryLatitude, order.deliveryLongitude),
-                        order: order
-                  )),
-              ButtonNavigation(
-                  orderId: order.id,
-                  text: Constants.ADD_PICKUP_IMAGE,
-                  routeName: ImageInput.routeName,
-                  iconData: Icons.photo_camera,
-                  arguments: ScreenArguments(
-                    orderId: order.id,
-                    location: 'Pickup',
-                    imageType: Constants.PICKUP
-                  )),
-              ButtonNavigation(
-                  orderId: order.id,
-                  text: Constants.PICKUP_IMAGES,
-                  routeName: Carousel.routeName,
-                  iconData: Icons.view_carousel,
-                  arguments: ScreenArguments(
-                    index: 0,
-                    orderId: order.id,
-                    location: 'Pickup'
-                  )),
-              SizedBox(
-                height: 20.0,
-              ),
               Card(
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        width: 150.0,
-                        child: ButtonNavigation(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: <Widget>[
+                      cardHeading('Summary'),
+                      Text('Pickup address: ' + order.pickupAddress),
+                      Text('Delivery address: ' + order.deliveryAddress),
+                      ButtonNavigation(
                           orderId: order.id,
-                          text: Constants.CONSIGNOR_SIGNATURE,
-                          routeName: SignaturePad.routeName,
-                          iconData: Icons.edit,
+                          text: Constants.MAP,
+                          routeName: LocationMap.routeName,
+                          iconData: Icons.map,
                           arguments: ScreenArguments(
-                            order: order,
-                            signedBy: Constants.CONSIGNOR
-                          )
-                        ),
-                      ),
-                    ),
-                    _getSignatureImage(Constants.CONSIGNOR)
-                  ]
+                              pickupLatLng: LatLng(order.pickupLatitude, order.pickupLongitude),
+                              deliveryLatLng: LatLng(order.deliveryLatitude, order.deliveryLongitude),
+                              order: order
+                          )),
+                    ],
+                  ),
                 ),
                 elevation: .5,
               ),
+              SizedBox(
+                height: 10.0,
+              ),
               Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      cardHeading('Pickup'),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          ButtonNavigation(
+                            orderId: order.id,
+                            text: Constants.ADD_PICKUP_IMAGE,
+                            routeName: ImageInput.routeName,
+                            iconData: Icons.photo_camera,
+                            arguments: ScreenArguments(
+                              orderId: order.id,
+                              location: Constants.PICKUP,
+                              imageType: Constants.PICKUP
+                            )),
+                          ButtonNavigation(
+                              orderId: order.id,
+                              text: Constants.PICKUP_IMAGES,
+                              routeName: Carousel.routeName,
+                              iconData: Icons.view_carousel,
+                              arguments: ScreenArguments(
+                                  index: 0,
+                                  order: order,
+                                  location: Constants.PICKUP,
+                                  marking: false
+                              )),
+                        ],
+                      ),
+//                  SizedBox(width: 15.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          ButtonNavigation(
+                              orderId: order.id,
+                              text: Constants.INSPECT_ON_PICKUP,
+                              routeName: ImageCanvas.routeName,
+                              iconData: Icons.directions_car,
+                              arguments: ScreenArguments(
+                                order: order,
+                                location: Constants.PICKUP,
+                              )),
+                          ButtonNavigation(
+                              orderId: order.id,
+                              text: Constants.PICKUP_INSPECTIONS,
+                              routeName: Carousel.routeName,
+                              iconData: Icons.view_carousel,
+                              arguments: ScreenArguments(
+                                  index: 0,
+                                  order: order,
+                                  location: Constants.PICKUP,
+                                  marking: true
+                              )),
+                        ],
+                      ),
+                    ]
+                  ),
+                ),
+                elevation: .5,
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      cardHeading('Delivery'),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          ButtonNavigation(
+                              orderId: order.id,
+                              text: Constants.ADD_DELIVERY_IMAGE,
+                              routeName: ImageInput.routeName,
+                              iconData: Icons.photo_camera,
+                              arguments: ScreenArguments(
+                                orderId: order.id,
+                                location: Constants.DELIVERY,
+                                imageType: Constants.DELIVERY
+                              )),
+                          ButtonNavigation(
+                              orderId: order.id,
+                              text: Constants.DELIVERY_IMAGES,
+                              routeName: Carousel.routeName,
+                              iconData: Icons.view_carousel,
+                              arguments: ScreenArguments(
+                                  index: 0,
+                                  order: order,
+                                  location: Constants.DELIVERY,
+                                  marking: false
+                              )),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          ButtonNavigation(
+                              orderId: order.id,
+                              text: Constants.INSPECT_ON_DELIVERY,
+                              routeName: ImageCanvas.routeName,
+                              iconData: Icons.directions_car,
+                              arguments: ScreenArguments(
+                                  order: order,
+                                  location: Constants.DELIVERY
+                              )),
+                          ButtonNavigation(
+                              orderId: order.id,
+                              text: Constants.DELIVERY_INSPECTIONS,
+                              routeName: Carousel.routeName,
+                              iconData: Icons.view_carousel,
+                              arguments: ScreenArguments(
+                                  index: 0,
+                                  order: order,
+                                  location: Constants.DELIVERY,
+                                  marking: true
+                              )),
+                        ],
+                      ),
+                      ]
+                  ),
+                ),
+                elevation: .5,
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: <Widget>[
+                      cardHeading('Sign Off'),
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SizedBox(
+                              width: 150.0,
+                              child: ButtonNavigation(
+                                orderId: order.id,
+                                text: Constants.CONSIGNOR_SIGNATURE,
+                                routeName: SignaturePad.routeName,
+                                iconData: Icons.edit,
+                                arguments: ScreenArguments(
+                                  order: order,
+                                  signedBy: Constants.CONSIGNOR
+                                )
+                              ),
+                            ),
+                          ),
+                          _getSignatureImage(Constants.CONSIGNOR)
+                        ]
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SizedBox(
+                              width: 150.0,
+                              child: ButtonNavigation(
+                                  orderId: order.id,
+                                  text: Constants.DRIVER_SIGNATURE,
+                                  routeName: SignaturePad.routeName,
+                                  iconData: Icons.edit,
+                                  arguments: ScreenArguments(
+                                      order: order,
+                                      signedBy: Constants.DRIVER
+                                  )
+                              ),
+                            ),
+                          ),
+                          _getSignatureImage(Constants.DRIVER)
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SizedBox(
+                              width: 140.0,
+                              child: ButtonNavigation(
+                                  orderId: order.id,
+                                  text: Constants.CONSIGNEE_SIGNATURE,
+                                  routeName: SignaturePad.routeName,
+                                  iconData: Icons.edit,
+                                  arguments: ScreenArguments(
+                                      order: order,
+                                      signedBy: Constants.CONSIGNEE
+                                  )
+                              ),
+                            ),
+                          ),
+                          _getSignatureImage(Constants.CONSIGNEE)
+                        ],
+                      )
+                    ]
+                  ),
+                ),
+                elevation: .5,
+              ),
+//              SizedBox(
+//                height: 10.0,
+//              ),
+             /* Card(
                 child: Row(
                   children: <Widget>[
                     Padding(
@@ -120,14 +295,16 @@ class OrderDetail extends StatelessWidget {
                 ),
                 elevation: .5,
               ),
-
+              SizedBox(
+                height: 10.0,
+              ),
               Card(
                 child: Row(
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: SizedBox(
-                        width: 150.0,
+                        width: 140.0,
                         child: ButtonNavigation(
                             orderId: order.id,
                             text: Constants.CONSIGNEE_SIGNATURE,
@@ -144,7 +321,7 @@ class OrderDetail extends StatelessWidget {
                   ],
                 ),
                 elevation: .5,
-              ),
+              ),*/
             ],
           ),
 
@@ -152,6 +329,19 @@ class OrderDetail extends StatelessWidget {
         ),
       ),
       drawer: AppDrawer(),
+    );
+  }
+
+  cardHeading(heading) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(heading,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            fontSize: 20.0,
+            color: Colors.grey
+        ),
+      ),
     );
   }
 
@@ -179,16 +369,4 @@ class OrderDetail extends StatelessWidget {
       },
     );
   }
-
-  /*Future<CameraDescription> firstCamera() async {
-    // Ensure that plugin services are initialized so that `availableCameras()`
-    // can be called before `runApp()`
-    WidgetsFlutterBinding.ensureInitialized();
-
-    // Obtain a list of the available cameras on the device.
-    final cameras = await availableCameras();
-
-    // Get a specific camera from the list of available cameras.
-    return cameras.first;
-  }*/
 }

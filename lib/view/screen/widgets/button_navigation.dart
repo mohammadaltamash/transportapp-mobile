@@ -19,15 +19,18 @@ class ButtonNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RaisedButton.icon(
-      icon: Icon(
-        iconData,
+    return SizedBox(
+      width: 160.0,
+      child: RaisedButton.icon(
+        icon: Icon(
+          iconData,
+        ),
+        label: Text(text),
+        color: Colors.amber,
+        onPressed: () {
+          Navigator.pushNamed(context, routeName, arguments: arguments);
+        },
       ),
-      label: Text(text),
-      color: Colors.amber,
-      onPressed: () {
-        Navigator.pushNamed(context, routeName, arguments: arguments);
-      },
     );
   }
 }

@@ -16,6 +16,7 @@ import 'package:transportappmobile/constants.dart' as Constants;
 import 'package:transportappmobile/model/order.dart';
 import 'package:transportappmobile/view/screen/order_detail.dart';
 import 'package:transportappmobile/view/screen/utilities.dart';
+import 'package:transportappmobile/view/screen/utility/file_uploader.dart';
 import 'package:transportappmobile/view/screen_arguments.dart';
 
 class SignaturePad extends StatefulWidget {
@@ -79,8 +80,11 @@ class _SignaturePadState extends State<SignaturePad> {
   File _imageFile;
   String baseUrl = Constants.API_SERVER + '/upload';
   int _count = 0;
+  FileUploader fileUploader;
 
-  _SignaturePadState({this.order, this.signedBy});
+  _SignaturePadState({this.order, this.signedBy}) {
+    fileUploader = FileUploader(order);
+  }
 
   @override
   void initState() {
@@ -200,12 +204,12 @@ class _SignaturePadState extends State<SignaturePad> {
   Widget _buildUploadBtn() {
     Widget btnWidget = Container();
 
-    if (_isUploading) {
+    if (fileUploader.isUploading) {
       // File is being uploaded then show a progress indicator
       btnWidget = Container(
           margin: EdgeInsets.only(top: 10.0),
           child: CircularProgressIndicator());
-    } else if (!_isUploading && _imageFile == null) {
+    } else if (!fileUploader.isUploading && _imageFile == null) {
 //       If image is picked by the user then show a upload btn
 
     btnWidget = Container(
@@ -227,15 +231,24 @@ class _SignaturePadState extends State<SignaturePad> {
           });
           _imageFile = await writeData(_img);
 //          debugPrint("onPressed " + encoded);
-          startUploading(baseUrl + '/' + order.id.toString() + '/' + signedBy);
+//          startUploading(baseUrl + '/' + order.id.toString() + '/' + signedBy);
+          doUpload();
         },
-        color: Colors.green,
+        color: Colors.blue,
         textColor: Colors.white,
       )
     );
     }
 
     return btnWidget;
+  }
+
+  doUpload() {
+//    setState(() {
+//      _isUploading = true;
+//    });
+    fileUploader.startUploading(baseUrl + '/' + order.id.toString() + '/' + signedBy, _imageFile, context);
+    _resetState();
   }
 
   Future<File> writeData(ByteData img) async {
@@ -333,7 +346,7 @@ class _SignaturePadState extends State<SignaturePad> {
     }
   }
 
-  Future<String> upload(String filename, String url) async {
+  /*Future<String> upload(String filename, String url) async {
     var request = http.MultipartRequest('POST', Uri.parse(url));
     request.files.add(http.MultipartFile.fromBytes(
         'file', File(filename).readAsBytesSync(),
@@ -343,7 +356,7 @@ class _SignaturePadState extends State<SignaturePad> {
     );
     var res = await request.send();
     return res.reasonPhrase;
-  }
+  }*/
 
   void _resetState() {
     setState(() {

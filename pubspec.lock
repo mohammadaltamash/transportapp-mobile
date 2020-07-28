@@ -237,6 +237,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
+  flutter_simple_sticker_view:
+    dependency: "direct main"
+    description:
+      name: flutter_simple_sticker_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   flutter_swiper:
     dependency: "direct main"
     description:
